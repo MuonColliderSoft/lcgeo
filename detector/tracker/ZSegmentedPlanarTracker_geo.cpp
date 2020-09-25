@@ -176,7 +176,7 @@ static Ref_t create_element(Detector& theDetector, xml_h e, SensitiveDetector se
     //-------
     // Box ladder_box( (supp_thickness + sens_thickness) / 2., supp_width / 2., supp_zhalf );
     Box supp_box( supp_thickness / 2., supp_width / 2., supp_zhalf );
-    Box sens_env_box( supp_thickness/2., supp_width/2., supp_zhalf );
+    Box sens_env_box( supp_thickness/2., supp_width/2., sens_zhalf );
     Box sens_box( sens_thickness/2., sens_width/2., sens_modlength/2.0 );
 
     // Volume ladder_vol( layername+"_ladd", ladder_box, theDetector.material("Air")  );
@@ -202,12 +202,12 @@ static Ref_t create_element(Detector& theDetector, xml_h e, SensitiveDetector se
 
 
 
-    // -------- create a measurement plane for the tracking surface attched to the sensitive volume -----
+    // -------- create a measurement plane for the tracking surface attached to the sensitive volume -----
     Vector3D u( 0. , 1. , 0. ) ;
     Vector3D v( 0. , 0. , 1. ) ;
     Vector3D n( 1. , 0. , 0. ) ;
+    Vector3D o( 0. , 0. , 0. ) ;
 
-    //    Vector3D o( 0. , 0. , 0. ) ;
 
     // compute the inner and outer thicknesses that need to be assigned to the tracking surface
     // depending on wether the support is above or below the sensor
@@ -219,7 +219,7 @@ static Ref_t create_element(Detector& theDetector, xml_h e, SensitiveDetector se
     if( isStripDetector )
       type.setProperty( SurfaceType::Measurement1D , true ) ;
 
-    VolPlane surf( sens_vol , type , inner_thickness , outer_thickness , u,v,n ) ; //,o ) ;
+    VolPlane surf( sens_vol , type , inner_thickness , outer_thickness , u, v, n, o ) ;
 
     //--------- loop over ladders ---------------------------
 
@@ -250,7 +250,7 @@ static Ref_t create_element(Detector& theDetector, xml_h e, SensitiveDetector se
       pv = layer_assembly.placeVolume( sens_env_vol, Transform3D(rot, Position(( radius + lthick/2. ) * cos(phi)  - offset * sin(phi),
                                                                                ( radius + lthick/2. ) * sin(phi)  + offset * cos(phi),
                                                                                0. ) ));
-      pv.addPhysVolID("layer", layer_id).addPhysVolID("module", j);
+      pv.addPhysVolID("module", j);
       ladderDE.setPlacement( pv );
 
 
