@@ -173,41 +173,24 @@ static Ref_t create_element(Detector& theDetector, xml_h e, SensitiveDetector se
     Material sens_mat     = theDetector.material( sens_matS ) ;
 
 
-    //-------
-    // Box ladder_box( (supp_thickness + sens_thickness) / 2., supp_width / 2., supp_zhalf );
+    // Creating the logical volumes for the support and sensors
     Box supp_box( supp_thickness / 2., supp_width / 2., supp_zhalf );
-    Box sens_env_box( supp_thickness/2., supp_width/2., sens_zhalf );
-    Box sens_box( sens_thickness/2., sens_width/2., sens_modlength/2.0 );
+    Box sens_box( sens_thickness/2., sens_width/2., sens_modlength/2.0 - 1e-03 * dd4hep::um );
 
-    // Volume ladder_vol( layername+"_ladd", ladder_box, theDetector.material("Air")  );
     Volume supp_vol( layername+"_support", supp_box, supp_mat  );
-    Volume sens_env_vol( layername+"_sensors", sens_env_box, theDetector.material("Air")  );
     Volume sens_vol( layername+"_sensor", sens_box, sens_mat );
+    Assembly ladder_assembly( layername + "_ladder" );
 
     sens_vol.setAttributes( theDetector, x_det.regionStr(), x_det.limitsStr(), sens_vis );
-    sens_env_vol.setAttributes( theDetector, x_det.regionStr(), x_det.limitsStr(), sens_vis );
     supp_vol.setAttributes( theDetector, x_det.regionStr(), x_det.limitsStr(), supp_vis );
 
     sens_vol.setSensitiveDetector(sens);
-
-    // Calculating Sensor placements inside a Ladder sensor envelope
-    std::vector<PlacedVolume> pv_sensor( sens_nmodules );
-    for(int s=0; s<sens_nmodules; ++s) {
-      double zshift = -0.5*(sens_nmodules*sens_modlength) + (s+0.5)*sens_modlength;
-      pv = sens_env_vol.placeVolume( sens_vol, Transform3D(RotationZYX(0., 0., 0.),
-                                                           Position(0., 0., zshift) ) );
-      pv.addPhysVolID("sensor", s );
-      pv_sensor.at(s) = pv;
-    }
-
-
 
     // -------- create a measurement plane for the tracking surface attached to the sensitive volume -----
     Vector3D u( 0. , 1. , 0. ) ;
     Vector3D v( 0. , 0. , 1. ) ;
     Vector3D n( 1. , 0. , 0. ) ;
     Vector3D o( 0. , 0. , 0. ) ;
-
 
     // compute the inner and outer thicknesses that need to be assigned to the tracking surface
     // depending on wether the support is above or below the sensor
@@ -220,6 +203,17 @@ static Ref_t create_element(Detector& theDetector, xml_h e, SensitiveDetector se
       type.setProperty( SurfaceType::Measurement1D , true ) ;
 
     VolPlane surf( sens_vol , type , inner_thickness , outer_thickness , u, v, n, o ) ;
+
+
+    // Calculating Sensor placements inside a Ladder sensor envelope
+    std::vector<PlacedVolume> pv_sensor( sens_nmodules );
+    for(int s=0; s<sens_nmodules; ++s) {
+      double zshift = -0.5*(sens_nmodules*sens_modlength) + (s+0.5)*sens_modlength;
+      pv = ladder_assembly.placeVolume( sens_vol, Position(0., 0., zshift) );
+      pv.addPhysVolID("sensor", s );
+      pv_sensor.at(s) = pv;
+    }
+
 
     //--------- loop over ladders ---------------------------
 
@@ -240,19 +234,6 @@ static Ref_t create_element(Detector& theDetector, xml_h e, SensitiveDetector se
       // Creating the Ladder to which sensors will be assigned
       std::string laddername = layername + _toString(j,"_ladder%d");
       DetElement ladderDE( layerDE ,  laddername , x_det.id() );
-
-
-      // Placing the Sensors envelope
-      lthick = sens_thickness;
-      radius = sens_distance;
-      offset = sens_offset;
-
-      pv = layer_assembly.placeVolume( sens_env_vol, Transform3D(rot, Position(( radius + lthick/2. ) * cos(phi)  - offset * sin(phi),
-                                                                               ( radius + lthick/2. ) * sin(phi)  + offset * cos(phi),
-                                                                               0. ) ));
-      pv.addPhysVolID("module", j);
-      ladderDE.setPlacement( pv );
-
 
       //--------- Placing sensors with relative shifts along Z inside the sensitive envelope ---------------------------
       for(int s=0; s<sens_nmodules; ++s) {
@@ -309,6 +290,17 @@ static Ref_t create_element(Detector& theDetector, xml_h e, SensitiveDetector se
         ///////////////////
 
       }
+
+      // Placing the Sensors envelope
+      lthick = sens_thickness;
+      radius = sens_distance;
+      offset = sens_offset;
+
+      pv = layer_assembly.placeVolume( ladder_assembly, Transform3D(rot, Position(( radius + lthick/2. ) * cos(phi)  - offset * sin(phi),
+                                                                               ( radius + lthick/2. ) * sin(phi)  + offset * cos(phi),
+                                                                               0. ) ));
+      pv.addPhysVolID("layer", layer_id).addPhysVolID("module", j);
+      ladderDE.setPlacement( pv );
 
     }
 
