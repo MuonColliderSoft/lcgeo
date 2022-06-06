@@ -281,6 +281,9 @@ static Ref_t create_detector(Detector& theDetector, xml_h e, SensitiveDetector s
                       thisLayer.widthSensitive = 2*comp_shape->GetDX();
                       thisLayer.ladderNumber = (int) nphi  ;
                       thisLayer.phi0 =  phic;
+
+                      thisLayer.sensorsPerLadder = nz;
+                      thisLayer.lengthSensor     = (z0 + comp_shape->GetDY()) * 2.0 / nz;
                     }
                     
                 }
