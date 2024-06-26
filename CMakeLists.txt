@@ -72,8 +72,8 @@ endif()
 add_dd4hep_plugin(${PackageName} SHARED ${sources})
 add_dd4hep_plugin(${PackageName}G4 SHARED ${G4sources})
 
-target_include_directories(${PackageName}   PRIVATE ${CMAKE_SOURCE_DIR}/detector/include )
-target_include_directories(${PackageName}G4 PRIVATE ${CMAKE_SOURCE_DIR}/detector/include )
+target_include_directories(${PackageName}   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/detector/include )
+target_include_directories(${PackageName}G4 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/detector/include )
 
 target_include_directories(${PackageName}   SYSTEM PUBLIC ${LCIO_INCLUDE_DIRS})
 target_include_directories(${PackageName}G4 SYSTEM PUBLIC ${LCIO_INCLUDE_DIRS})

@@ -115,7 +115,7 @@ static Ref_t create_detector(Detector& theDetector, xml_h e, SensitiveDetector s
             xml_det_t incl_stack = includes;
             for (xml_coll_t ci(incl_stack, _U(module_component)); ci; ++ci, ++ncomponents) {
                 xml_comp_t x_comp = ci;
-                string c_nam = _toString(ncomponents, "component%d");
+		string c_nam  = (x_comp.isSensitive())? _toString(ncomponents, "sensor%d") : _toString(ncomponents ,"component%d");
                 Box c_box(m_env.width() / 2.0, m_env.length() / 2.0, x_comp.thickness() / 2.0);
                 Volume c_vol(c_nam, c_box, theDetector.material(x_comp.materialStr()));
 
