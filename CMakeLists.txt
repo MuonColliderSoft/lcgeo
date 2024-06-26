@@ -8,7 +8,7 @@ project(${PackageName})
 
 # project version
 SET( ${PackageName}_VERSION_MAJOR 0 )
-SET( ${PackageName}_VERSION_MINOR 19 )
+SET( ${PackageName}_VERSION_MINOR 20 )
 SET( ${PackageName}_VERSION_PATCH 0 )
 
 SET( ${PackageName}_VERSION "${${PackageName}_VERSION_MAJOR}.${${PackageName}_VERSION_MINOR}" )
@@ -53,8 +53,18 @@ message ( STATUS "ROOT_VERSION: ${ROOT_VERSION}" )
 
 find_package( Geant4 REQUIRED ) 
 find_package( LCIO REQUIRED)
+# Shim for older LCIO versions
+if(NOT TARGET LCIO::lcio)
+  add_library(LCIO::lcio INTERFACE IMPORTED GLOBAL)
+  set_target_properties(LCIO::lcio
+    PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${LCIO_INCLUDE_DIRS}"
+    INTERFACE_LINK_LIBRARIES "${LCIO_LIBRARIES}"
+  )
+endif()
 
 add_subdirectory(detectorSegmentations)
+add_subdirectory(detectorCommon)
 
 file(GLOB sources 
   ./detector/tracker/*.cpp
@@ -85,8 +95,8 @@ add_library(lcgeo ALIAS k4geo)
 target_include_directories(${PackageName}   PRIVATE ${PROJECT_SOURCE_DIR}/detector/include )
 target_include_directories(${PackageName}G4 PRIVATE ${PROJECT_SOURCE_DIR}/detector/include )
 
-target_link_libraries(${PackageName}   DD4hep::DDCore DD4hep::DDRec DD4hep::DDParsers ROOT::Core LCIO::LCIO detectorSegmentations)
-target_link_libraries(${PackageName}G4 DD4hep::DDCore DD4hep::DDRec DD4hep::DDParsers DD4hep::DDG4 ROOT::Core ${Geant4_LIBRARIES} LCIO::LCIO)
+target_link_libraries(${PackageName}   DD4hep::DDCore DD4hep::DDRec DD4hep::DDParsers ROOT::Core LCIO::lcio detectorSegmentations)
+target_link_libraries(${PackageName}G4 DD4hep::DDCore DD4hep::DDRec DD4hep::DDParsers DD4hep::DDG4 ROOT::Core ${Geant4_LIBRARIES} LCIO::lcio)
 
 #Create this_package.sh file, and install
 dd4hep_instantiate_package(${PackageName})

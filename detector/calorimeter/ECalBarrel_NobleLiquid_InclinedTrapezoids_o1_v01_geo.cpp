@@ -568,7 +568,7 @@ static dd4hep::detail::Ref_t createECalBarrelInclined(dd4hep::Detector& aLcdd,
   caloData->extent[0] = Rmin;
   caloData->extent[1] = Rmax; // or r_max ?
   caloData->extent[2] = 0.;      // NN: for barrel detectors this is 0
-  caloData->extent[3] = caloDim.dz()/2;
+  caloData->extent[3] = caloDim.dz();
 
   // Set type flags
   dd4hep::xml::setDetectorTypeFlag(xmlDetElem, caloDetElem);
@@ -626,8 +626,8 @@ static dd4hep::detail::Ref_t createECalBarrelInclined(dd4hep::Detector& aLcdd,
     caloLayer.outer_thickness           = difference_bet_r1r2 / 2;
 
     caloLayer.absorberThickness         = absorberThickness;
-    caloLayer.cellSize0 = 2;
-    caloLayer.cellSize1 = 2;
+    caloLayer.cellSize0 = 2 * dd4hep::mm;
+    caloLayer.cellSize1 = 2 * dd4hep::mm;
   
     caloData->layers.push_back(caloLayer);
   }
