@@ -1,0 +1,5 @@
+/geometry/test/tolerance 1 fm
+/geometry/test/run
+exit
+
+
