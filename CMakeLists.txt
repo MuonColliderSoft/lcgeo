@@ -130,7 +130,11 @@ if(INSTALL_MUONC_FILES)
   SET(MUONC_GEO_DIR ${CMAKE_INSTALL_PREFIX}/share/lcgeo/compact/
       CACHE PATH "Installation directory for geometry files")
 
-  FILE(GLOB GEO_DIRS LIST_DIRECTORIES true MuColl/MuColl_v*)
+  FILE(GLOB GEO_DIRS LIST_DIRECTORIES true
+        MuColl/MuColl_v0 MuColl/MuColl_v1
+        MuColl/MuColl_v1.0.1 MuColl/MuColl_v1.0.2 MuColl/MuColl_v1.1
+        MuColl/MuColl_v1.1.1 MuColl/MuColl_v1.1.2 MuColl/MuColl_v1.1.3
+        MuColl/MuSIC_v1 MuColl/MuSIC_v2)
   INSTALL(DIRECTORY ${GEO_DIRS} DESTINATION ${MUONC_GEO_DIR} PATTERN "*.md" EXCLUDE)
 endif()
 

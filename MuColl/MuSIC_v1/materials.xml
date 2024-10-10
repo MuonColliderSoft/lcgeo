@@ -109,20 +109,6 @@
         <fraction n="0.40" ref="Epoxy"/>
     </material>
 
-    <material name="TungstenDens24">
-        <D value="17.8" unit="g/cm3"/>
-        <fraction n="0.93" ref="W"/>
-        <fraction n="0.061" ref="Ni"/>
-        <fraction n="0.009" ref="Fe"/>
-    </material>
-
-    <material formula="W" name="Tungsten" state="solid" >
-        <RL type="X0" unit="cm" value="0.350418" />
-        <NIL type="lambda" unit="cm" value="10.3057" />
-        <D type="density" unit="g/cm3" value="19.3" />
-        <composite n="1" ref="W" />
-    </material>
-
     <material name="Quartz">
         <D type="density" value="2.2" unit="g/cm3"/>
         <composite n="1" ref="Si"/>
@@ -163,6 +149,34 @@
         <fraction n="0.050" ref="B"/>
         <fraction n="0.612" ref="C"/>
         <fraction n="0.222" ref="O"/>
+    </material>
+
+    <material name="TungstenDens24">
+        <D value="17.8" unit="g/cm3"/>
+        <fraction n="0.93" ref="W"/>
+        <fraction n="0.061" ref="Ni"/>
+        <fraction n="0.009" ref="Fe"/>
+    </material>
+
+    <material formula="W" name="Tungsten" state="solid" >
+        <RL type="X0" unit="cm" value="0.350418" />
+        <NIL type="lambda" unit="cm" value="10.3057" />
+        <D type="density" unit="g/cm3" value="19.3" />
+        <composite n="1" ref="W" />
+    </material>
+
+    <material name="BCH2_MuSIC" state="solid">
+        <D type="density" unit="g/cm3" value="0.93"/>
+        <composite n="2" ref="H"/>
+        <composite n="1" ref="B"/>
+        <composite n="1" ref="C"/>
+    </material>
+
+    <material name="Tungsten_MuSIC" state="solid">
+        <D type="density" value="17.8" unit="g/cm3"/>
+        <fraction n="0.95" ref="W"/>
+        <fraction n="0.035" ref="Ni"/>
+        <fraction n="0.015" ref="Cu"/>
     </material>
 
     <material name="Steel235">
@@ -224,23 +238,11 @@
         <fraction n="0.922582" ref="C"/>
     </material>
 
+    <!-- relevant for CRILIN -->
     <material name="LeadDiflourite">
         <D type="density" value="7.77" unit="g/cm3"/>
         <composite n="1" ref="PB"/>
         <composite n="2" ref="F"/>
-    </material>
-
-    <material name="BGO">
-        <D type="density" value="7.12" unit="g/cm3"/>
-        <composite n="4" ref="BI"/>
-        <composite n="3" ref="GE"/>
-        <composite n="12" ref="O"/>
-    </material>
-
-    <material name="CsI">
-        <D type="density" value="4.51" unit="g/cm3"/>
-        <composite n="1" ref="CS"/>
-        <composite n="1" ref="I"/>
     </material>
 
 </materials>

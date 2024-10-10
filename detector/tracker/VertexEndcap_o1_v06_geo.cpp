@@ -91,7 +91,7 @@ static Ref_t create_detector(Detector& theDetector, xml_h e, SensitiveDetector s
             xml_comp_t c       = ci;
             double     c_thick = c.thickness();
             Material   c_mat   = theDetector.material(c.materialStr());
-            string     c_name  = _toString(c_id,"component%d");
+            string     c_name  = (c.isSensitive())? _toString(c_id,"sensor%d") : _toString(c_id,"component%d");
             Volume     c_vol(c_name, Trapezoid(x1,x2,c_thick/2e0,c_thick/2e0,z), c_mat);
             
             c_vol.setVisAttributes(theDetector.visAttributes(c.visStr()));
