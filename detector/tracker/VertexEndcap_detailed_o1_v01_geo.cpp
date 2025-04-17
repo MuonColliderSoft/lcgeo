@@ -17,10 +17,12 @@
 //====================================================================
 
 #include "DD4hep/DetFactoryHelper.h"
-#include <map>
 #include "XML/Utilities.h"
 #include "DD4hep/Printout.h"
 #include "DDRec/DetectorData.h"
+
+#include <map>
+#include <list>
 
 using namespace std;
 
